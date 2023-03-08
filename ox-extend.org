@@ -43,7 +43,12 @@
       (dolist (extension extensions)
         (ox-extend--apply extension :remove))))
 
-  (advice-add 'org-publish-file :around #'ox-extend--advise-org-publish-file)
+  ;;;###autoload
+  (defun ox-extend-add ()
+      (advice-add 'org-publish-file :around #'ox-extend--advise-org-publish-file))
+
+  (defun ox-extend-remove ()
+      (advice-remove 'org-publish-file #'ox-extend--advise-org-publish-file))
 
   (provide 'ox-extend)
 #+end_src

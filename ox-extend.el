@@ -16,12 +16,6 @@
 
 (setq ox-extend-extensions-alist '())
 
-(defun ox-extend--apply (extension add_or_remove)
-  "Call the ADD_OR_REMOVE function for an EXTENSION."
-  (apply (plist-get (cdr (assoc extension ox-extend-extensions-alist))
-		    add_or_remove)
-	 ()))
-
 (defun ox-extend--advise (orig-fun &rest args)
   "Advise org-publish-file (ORIG-FUN) to add and remove each extension contained in ARGS."
   (let ((extensions (org-publish-property :extensions (nth 1 args))))
@@ -30,6 +24,12 @@
     (apply orig-fun args)
     (dolist (extension extensions)
       (ox-extend--apply extension :remove))))
+
+(defun ox-extend--apply (extension add_or_remove)
+  "Call the ADD_OR_REMOVE function for an EXTENSION."
+  (apply (plist-get (cdr (assoc extension ox-extend-extensions-alist))
+		    add_or_remove)
+	 ()))
 
 ;;;###autoload
 (defun ox-extend-add ()

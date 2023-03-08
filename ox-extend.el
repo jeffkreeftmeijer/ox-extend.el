@@ -22,7 +22,7 @@
 		    add_or_remove)
 	 ()))
 
-(defun ox-extend--advise-org-publish-file (orig-fun &rest args)
+(defun ox-extend--advise (orig-fun &rest args)
   "Advise org-publish-file (ORIG-FUN) to add and remove each extension contained in ARGS."
   (let ((extensions (org-publish-property :extensions (nth 1 args))))
     (dolist (extension extensions)
@@ -33,10 +33,10 @@
 
 ;;;###autoload
 (defun ox-extend-add ()
-    (advice-add 'org-publish-file :around #'ox-extend--advise-org-publish-file))
+    (advice-add 'org-publish-file :around #'ox-extend--advise))
 
 (defun ox-extend-remove ()
-    (advice-remove 'org-publish-file #'ox-extend--advise-org-publish-file))
+    (advice-remove 'org-publish-file #'ox-extend--advise))
 
 (provide 'ox-extend)
 

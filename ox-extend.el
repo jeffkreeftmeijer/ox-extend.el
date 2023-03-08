@@ -4,17 +4,17 @@
 
 ;; ox-extend.el adds :extensions to org-publish-project-alist.
 ;;
-;; Each extension registers itself in ox-extensions-alist with a
-;; function to add and remove it. In org-publish-project-alist, the
-;; :extensions key holds a list of enabled extensions for that
-;; specific publishing project.
+;; Each extension registers itself in ox-extend-extensions-alist
+;; with a function to add and remove it. In
+;; org-publish-project-alist, the :extensions key holds a list of
+;; enabled extensions for that specific publishing project.
 ;;
 ;; The enabled extensions are added before org-publish-file, and
 ;; removed immediately after.
 
 ;;; Code:
 
-(setq ox-extensions-alist '())
+(setq ox-extend-extensions-alist '())
 
 (defun ox-extend--apply (extension add_or_remove)
   "Call the ADD_OR_REMOVE function for an EXTENSION."

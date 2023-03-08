@@ -66,6 +66,10 @@ This adds the extensions when they're needed, and removes them to prevent them f
 
 #+end_src
 
+The =ox-extend-add= and =ox-extend-remove= add and remove the main advise, enabling and disabling all extensions completely.
+When loading =ox-extend.el=, call =ox-extend-add= to add the advise.
+The =ox-extend-remove= function exists for convenience and shouldn't have to be used regularly, if ever.
+
 #+headers: :tangle ox-extend.el
 #+begin_src emacs-lisp
   ;;;###autoload
@@ -74,7 +78,12 @@ This adds the extensions when they're needed, and removes them to prevent them f
 
   (defun ox-extend-remove ()
       (advice-remove 'org-publish-file #'ox-extend--advise))
+#+end_src
 
+Finally, use the =provide= fucntion to announce =ox-extend.el=:
+
+#+headers: :tangle ox-extend.el
+#+begin_src emacs-lisp
   (provide 'ox-extend)
 #+end_src
 

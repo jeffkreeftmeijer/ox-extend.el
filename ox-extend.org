@@ -24,10 +24,25 @@
   ;;; Code:
 #+end_src
 
+The =ox-extend-extensions-alist= is an association list for registered extensions:
+Each extension must register itseld in this list when it's loaded to be available for use in publishing projects.
+
 #+headers: :tangle ox-extend.el
 #+begin_src emacs-lisp
   (setq ox-extend-extensions-alist '())
+#+end_src
 
+Each element consists of  a symbol that identifies the extension and a list with an =:add= function to add the extension's advise and a =:remove= function to remove it.
+
+#+caption: An example of an extension to be added to =ox-extend-extensions-alist=:
+#+begin_src emacs-lisp
+  '('ox-html-git-mtime
+    :add (lambda () (advice-add 'org-html-title :around #'ox-html-upcase-title))
+    :remove (lambda () (advice-remove 'org-html-title #'ox-html-upcase-title))
+#+end_src
+
+#+headers: :tangle ox-extend.el
+#+begin_src emacs-lisp
   (defun ox-extend--apply (extension add_or_remove)
     "Call the ADD_OR_REMOVE function for an EXTENSION."
     (apply (plist-get (cdr (assoc extension ox-extend-extensions-alist))

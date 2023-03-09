@@ -97,3 +97,92 @@ Finally, use the =provide= fucntion to announce =ox-extend.el=:
 #+begin_src emacs-lisp :tangle ox-extend.el :exports none
   ;;; ox-extend.el ends here
 #+end_src
+
+* Example
+:PROPERTIES:
+:CUSTOM_ID: example
+:END:
+
+The /hello world/ example adds advise to print "hello, world!" before ~org-publish-file~ is called, and "goodbye, world!" after.
+
+Start by loading =ox-extend.el= by adding its directory to the ~load-path~ and calling ~require~:
+
+#+name: require
+#+begin_src emacs-lisp
+  (add-to-list 'load-path ".")
+  (require 'ox-extend)
+#+end_src
+
+With =ox-extend.el= loaded, add the extension to ~ox-extend-extensions-alist~ by passing an association list with an ~:add~ and a ~:remove~ key.
+Instead of actually altering the publishing behavior, both functions print a message to the =*Messages*= buffer:
+
+#+name: add-to-list
+#+begin_src emacs-lisp
+  (add-to-list
+   'ox-extend-extensions-alist '('hello-world :add (lambda () (message "hello, world!"))
+                                              :remove (lambda () (message "goodbye, world!"))))
+#+end_src
+
+To try the extension, enable the library by calling ~ox-extend-add~.
+Then, call ~org-publish-file~ with a project that lists ~'hello-world~ as one of its ~:extensions~:
+
+#+name: add
+#+headers: :exports none
+#+begin_src emacs-lisp
+  (ox-extend-add)
+#+end_src
+
+#+name: publish-file
+#+headers: :exports none
+#+begin_src emacs-lisp
+(org-publish-file "ox-extend.org"
+                  '("ox-extend-example"
+                    :base-directory "."
+                    :publishing-directory "dist"
+                    :extensions ('hello-world)))
+#+end_src
+
+#+headers: :noweb yes
+#+begin_src emacs-lisp
+  <<add>>
+
+  <<publish-file>>
+#+end_src
+
+The =*Messages*= buffer prints both messages:
+
+#+begin_example
+hello, world!
+Publishing file ox-extend.org using ‘org-html-publish-to-html’
+goodbye, world!
+#+end_example
+
+#+name: teardown
+#+headers: :exports none
+#+begin_src emacs-lisp
+  (delete-directory "dist" t)
+#+end_src
+
+#+headers: :exports none
+#+headers: :tangle test.el
+#+headers: :noweb yes
+#+begin_src emacs-lisp
+  (require 'ert)
+  <<require>>
+
+  <<add-to-list>>
+
+  (ert-deftest hello-world-test ()
+    <<add>>
+
+    <<publish-file>>
+
+    (let ((output (with-current-buffer "*Messages*" (buffer-string))))
+      (let ((lines (split-string output "\n")))
+
+        (should (string-match-p "hello, world!" output))
+        (should (string-match-p "ox-extend.org" output))
+        (should (string-match-p "goodbye, world!" output))))
+
+    <<teardown>>)
+#+end_src

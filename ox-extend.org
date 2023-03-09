@@ -24,6 +24,13 @@
   ;;; Code:
 #+end_src
 
+The =ox-extend= package requires =ox-publish.el= to advise =org-publish-file= and use the =org-publish-property=:
+
+#+headers: :tangle ox-extend.el
+#+begin_src emacs-lisp
+  (require 'ox-publish)
+#+end_src
+
 The =ox-extend-extensions-alist= is an association list for registered extensions:
 Each extension must register itseld in this list when it's loaded to be available for use in publishing projects.
 

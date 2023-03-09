@@ -14,6 +14,8 @@
 
 ;;; Code:
 
+(require 'ox-publish)
+
 (setq ox-extend-extensions-alist '())
 
 (defun ox-extend--advise (orig-fun &rest args)

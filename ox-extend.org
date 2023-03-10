@@ -27,6 +27,7 @@
 
 The =ox-extend= package requires =ox-publish.el= to advise =org-publish-file= and use the =org-publish-property=:
 
+#+caption: =ox-extend.el=: requiring =ox-publish=
 #+headers: :tangle ox-extend.el
 #+begin_src emacs-lisp
   (require 'ox-publish)
@@ -35,6 +36,7 @@ The =ox-extend= package requires =ox-publish.el= to advise =org-publish-file= an
 The =ox-extend-extensions-alist= is an association list for registered extensions:
 Each extension must register itseld in this list when it's loaded to be available for use in publishing projects.
 
+#+caption: =ox-extend.el=: initializing =ox-extend-extensions-alist=
 #+headers: :tangle ox-extend.el
 #+begin_src emacs-lisp
   (setq ox-extend-extensions-alist '())
@@ -55,6 +57,7 @@ It finds the =:add= and =:remove= functions for all extensions added to the proj
 For each extenson, the =:add= function is executed before =org-publish-file=, and =:remove= is called immediately after.
 This adds the extensions when they're needed, and removes them to prevent them from interfering with future publishing:
 
+#+caption: =ox-extend.el=: advice for =org-publish-file=
 #+headers: :tangle ox-extend.el
 #+begin_src emacs-lisp
   (defun ox-extend--advise (orig-fun &rest args)
@@ -77,6 +80,7 @@ The =ox-extend-add= and =ox-extend-remove= add and remove the main advise, enabl
 When loading =ox-extend.el=, call =ox-extend-add= to add the advise.
 The =ox-extend-remove= function exists for convenience and shouldn't have to be used regularly, if ever.
 
+#+caption: =ox-extend.el=: adding and removing advice
 #+headers: :tangle ox-extend.el
 #+begin_src emacs-lisp
   ;;;###autoload
@@ -89,6 +93,7 @@ The =ox-extend-remove= function exists for convenience and shouldn't have to be 
 
 Finally, use the =provide= fucntion to announce =ox-extend.el=:
 
+#+caption: =ox-extend.el=: providing =ox-extend=
 #+headers: :tangle ox-extend.el
 #+begin_src emacs-lisp
   (provide 'ox-extend)
@@ -207,6 +212,7 @@ Our aim is to prepend the document's title with the correct markup.
 First, require ~ox-extend~.
 Unlike the example above, actual extensions don't alter the load path:
 
+#+caption: =ox-md-title.el=: requiring =ox-extend=
 #+headers: :tangle ox-md-title.el
 #+begin_src emacs-lisp
   (require 'ox-extend)
@@ -215,6 +221,7 @@ Unlike the example above, actual extensions don't alter the load path:
 Then, write an ~:around~ [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html][advice]] for src_emacs-lisp[:exports code]{org-md-template}, which gets the original funcion and arguments.
 In the function body, we call out to src_emacs-lisp[:exports code]{org-md--headline-title} to generate the title with arguments we find from the second argument in src_emacs-lisp[:exports code]{args}:
 
+#+caption: =ox-md-title.el=: advising =org-md-template=
 #+headers: :tangle ox-md-title.el
 #+begin_src emacs-lisp
   (defun ox-md-title--advise-template (orig-fun &rest args)
@@ -229,6 +236,7 @@ In the function body, we call out to src_emacs-lisp[:exports code]{org-md--headl
 To enable the extension, add src_emacs-lisp[:exports code]{ox-md-title-add} and src_emacs-lisp[:exports code]{ox-md-title-remove} and add them to the src_emacs-lisp[:exports code]{ox-extend-extensions-alist}.
 We're also setting the src_emacs-lisp[:exports code]{org-md-toplevel-hlevel} to =2=, as the extension adds an extra headline to the root of the page:
 
+#+caption: =ox-md-title.el=: registering the extension
 #+headers: :tangle ox-md-title.el
 #+begin_src emacs-lisp
   (defun ox-md-title-add ()
@@ -246,6 +254,7 @@ We're also setting the src_emacs-lisp[:exports code]{org-md-toplevel-hlevel} to 
 
 Finally, =provide= the =ox-md-title.el= package:
 
+#+caption: =ox-md-title.el=: providing =ox-md-title=
 #+headers: :tangle ox-md-title.el
 #+begin_src emacs-lisp
   (provide 'ox-md-title)

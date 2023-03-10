@@ -5,6 +5,7 @@
 #+title: ox-extend: Structured extensions for ox.el
 #+author: Jeff Kreeftmeijer
 #+date: 2023-03-05
+#+options: toc:nil
 
 #+begin_src emacs-lisp :tangle ox-extend.el :exports none
   ;;; ox-extend.el --- Structured extensions for ox.el
@@ -70,7 +71,6 @@ This adds the extensions when they're needed, and removes them to prevent them f
     (apply (plist-get (cdr (assoc extension ox-extend-extensions-alist))
 		      add_or_remove)
 	   ()))
-
 #+end_src
 
 The =ox-extend-add= and =ox-extend-remove= add and remove the main advise, enabling and disabling all extensions completely.

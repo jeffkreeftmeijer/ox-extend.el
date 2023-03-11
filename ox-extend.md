@@ -42,15 +42,16 @@ For each extenson, the `:add` function is executed before `org-publish-file`, an
          ()))
 ```
 
-The `ox-extend-add` and `ox-extend-remove` add and remove the main advise, enabling and disabling all extensions completely. When loading `ox-extend.el`, call `ox-extend-add` to add the advise. The `ox-extend-remove` function exists for convenience and shouldn't have to be used regularly, if ever.
+The `ox-extend-add` and `ox-extend-remove` add and remove the main advise, enabling and disabling all extensions completely. When loading `ox-extend.el`, `ox-extend-add` is automatically called to install the main advise. The `ox-extend-remove` function exists for convenience and shouldn't have to be used regularly, if ever.
 
 ```emacs-lisp
-;;;###autoload
 (defun ox-extend-add ()
     (advice-add 'org-publish-file :around #'ox-extend--advise))
 
 (defun ox-extend-remove ()
     (advice-remove 'org-publish-file #'ox-extend--advise))
+
+(ox-extend-add)
 ```
 
 Finally, use the `provide` fucntion to announce `ox-extend.el`:
@@ -79,11 +80,9 @@ With `ox-extend.el` loaded, add the extension to `ox-extend-extensions-alist` by
                                             :remove (lambda () (message "goodbye, world!"))))
 ```
 
-To try the extension, enable the library by calling `ox-extend-add`. Then, call `org-publish-file` with a project that lists `'hello-world` as one of its `:extensions`:
+To try the extension, call `org-publish-file` with a project that lists `'hello-world` as one of its `:extensions`:
 
 ```emacs-lisp
-(ox-extend-add)
-
 (org-publish-file "ox-extend.org"
                   '("ox-extend-example"
                     :base-directory "."
@@ -159,8 +158,6 @@ And use the extension when publishing<sup><a id="fnr.1" class="footref" href="#f
 (add-to-list 'load-path ".")
 (require 'ox-md-title)
 
-(ox-extend-add)
-
 (org-publish-file "ox-extend.org"
                   '("ox-extend-markdown"
                     :base-directory "."
@@ -179,13 +176,13 @@ head ox-extend.md
 
 # ox-extend: Structured extensions for ox.el
 
-- [Example](#example)
-- [Writing extensions](#writing-extensions)
-
 The `ox-extend` package requires `ox-publish.el` to advise `org-publish-file` and use the `org-publish-property`:
 
 ```emacs-lisp
 (require 'ox-publish)
+```
+
+The `ox-extend-extensions-alist` is an association list for registered extensions: Each extension must register itseld in this list when it's loaded to be available for use in publishing projects.
 ```
 
 ## Footnotes

@@ -77,18 +77,19 @@ This adds the extensions when they're needed, and removes them to prevent them f
 #+end_src
 
 The =ox-extend-add= and =ox-extend-remove= add and remove the main advise, enabling and disabling all extensions completely.
-When loading =ox-extend.el=, call =ox-extend-add= to add the advise.
+When loading =ox-extend.el=, =ox-extend-add= is automatically called to install the main advise.
 The =ox-extend-remove= function exists for convenience and shouldn't have to be used regularly, if ever.
 
 #+caption: =ox-extend.el=: adding and removing advice
 #+headers: :tangle ox-extend.el
 #+begin_src emacs-lisp
-  ;;;###autoload
   (defun ox-extend-add ()
       (advice-add 'org-publish-file :around #'ox-extend--advise))
 
   (defun ox-extend-remove ()
       (advice-remove 'org-publish-file #'ox-extend--advise))
+
+  (ox-extend-add)
 #+end_src
 
 Finally, use the =provide= fucntion to announce =ox-extend.el=:
@@ -128,14 +129,7 @@ Instead of actually altering the publishing behavior, both functions print a mes
                                               :remove (lambda () (message "goodbye, world!"))))
 #+end_src
 
-To try the extension, enable the library by calling ~ox-extend-add~.
-Then, call ~org-publish-file~ with a project that lists ~'hello-world~ as one of its ~:extensions~:
-
-#+name: add
-#+headers: :exports none
-#+begin_src emacs-lisp
-  (ox-extend-add)
-#+end_src
+To try the extension, call ~org-publish-file~ with a project that lists ~'hello-world~ as one of its ~:extensions~:
 
 #+name: publish-file
 #+headers: :exports none
@@ -149,8 +143,6 @@ Then, call ~org-publish-file~ with a project that lists ~'hello-world~ as one of
 
 #+headers: :noweb yes
 #+begin_src emacs-lisp
-  <<add>>
-
   <<publish-file>>
 #+end_src
 
@@ -178,8 +170,6 @@ goodbye, world!
   <<add-to-list>>
 
   (ert-deftest hello-world-test ()
-    <<add>>
-
     <<publish-file>>
 
     (let ((output (with-current-buffer "*Messages*" (buffer-string))))
@@ -265,8 +255,6 @@ And use the extension when publishing[fn:gfm]:
 #+begin_src emacs-lisp
   (add-to-list 'load-path ".")
   (require 'ox-md-title)
-
-  (ox-extend-add)
 
   (org-publish-file "ox-extend.org"
 		    '("ox-extend-markdown"

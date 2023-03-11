@@ -33,12 +33,13 @@
 		    add_or_remove)
 	 ()))
 
-;;;###autoload
 (defun ox-extend-add ()
     (advice-add 'org-publish-file :around #'ox-extend--advise))
 
 (defun ox-extend-remove ()
     (advice-remove 'org-publish-file #'ox-extend--advise))
+
+(ox-extend-add)
 
 (provide 'ox-extend)
 

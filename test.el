@@ -7,8 +7,6 @@
                                             :remove (lambda () (message "goodbye, world!"))))
 
 (ert-deftest hello-world-test ()
-  (ox-extend-add)
-
   (org-publish-file "ox-extend.org"
                     '("ox-extend-example"
                       :base-directory "."
